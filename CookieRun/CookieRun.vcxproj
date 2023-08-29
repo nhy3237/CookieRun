@@ -146,6 +146,7 @@
     </ClCompile>
     <ClCompile Include="temp.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,12 +155,16 @@
   <ItemGroup>
     <Image Include="images\Background.bmp" />
     <Image Include="images\Barrier_bottom.bmp" />
+    <Image Include="images\Barrier_bottom2.bmp" />
+    <Image Include="images\Barrier_bottom3.bmp" />
     <Image Include="images\Barrier_Top1.bmp" />
     <Image Include="images\Barrier_Top2.bmp" />
     <Image Include="images\Bg_Bridge.bmp" />
     <Image Include="images\Cookie_Apple.bmp" />
     <Image Include="images\Cookie_Brave.bmp" />
     <Image Include="images\Icon_GingerBrave.ico" />
+    <Image Include="images\Item_HP.bmp" />
+    <Image Include="images\Item_HP2.bmp" />
     <Image Include="images\Jelly_Apple.bmp" />
     <Image Include="images\Jelly_Basic.bmp" />
     <Image Include="images\Jelly_Basic2.bmp" />

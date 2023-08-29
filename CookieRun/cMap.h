@@ -14,6 +14,12 @@ struct Object
 	BITMAP bitObj;
 };
 
+struct ImageInfo
+{
+	HBITMAP hImage;
+	BITMAP bitImage;
+};
+
 class cMap
 {
 private:
@@ -40,10 +46,17 @@ private:
 
 	HBITMAP hBBarrier;
 	BITMAP bitBBarrier;
+	HBITMAP hB2Barrier;
+	BITMAP bitB2Barrier;
 	HBITMAP hTBarrier1;
 	BITMAP bitTBarrier1;
 	HBITMAP hTBarrier2;
 	BITMAP bitTBarrier2;
+
+	HBITMAP hHpItem;
+	BITMAP bitHpItem;
+	HBITMAP hHp2Item;
+	BITMAP bitHp2Item;
 
 	HBITMAP hGaugeImg;
 	BITMAP bitGauge;
@@ -59,6 +72,7 @@ private:
 	
 	int xObject;
 	int cntObject;
+
 
 public:
 	cMap();

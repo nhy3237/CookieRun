@@ -9,6 +9,18 @@ cMap::cMap()
 
     cntObject = 0;
     xObject = 1630;
+
+    const TCHAR* imageFiles[] = {
+        TEXT("images/Jelly_Basic.bmp"),
+        TEXT("images/Jelly_Basic2.bmp"),
+        TEXT("images/Jelly_Rainbow.bmp"),
+        TEXT("images/Jelly_Apple.bmp"),
+        TEXT("images/Jelly_Cherry.bmp"),
+        TEXT("images/Jelly_Flower.bmp"),
+        TEXT("images/Barrier_Bottom.bmp"),
+        TEXT("images/Barrier_Top1.bmp"),
+        TEXT("images/Barrier_Top2.bmp")
+    };
 }
 
 cMap::~cMap()
@@ -84,20 +96,32 @@ void cMap::CreateObject()
     // Barrier_Bottom
     hBBarrier = (HBITMAP)LoadImage(NULL, TEXT("images/Barrier_Bottom.bmp"),
         IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-
     GetObject(hBBarrier, sizeof(BITMAP), &bitBBarrier);
+
+    // Barrier_Bottom2
+    hB2Barrier = (HBITMAP)LoadImage(NULL, TEXT("images/Barrier_Bottom2.bmp"),
+        IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+    GetObject(hB2Barrier, sizeof(BITMAP), &bitB2Barrier);
 
     // Barrier_Top1
     hTBarrier1 = (HBITMAP)LoadImage(NULL, TEXT("images/Barrier_Top1.bmp"),
         IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-
     GetObject(hTBarrier1, sizeof(BITMAP), &bitTBarrier1);
 
     // Barrier_Top2
     hTBarrier2 = (HBITMAP)LoadImage(NULL, TEXT("images/Barrier_Top2.bmp"),
         IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-
     GetObject(hTBarrier2, sizeof(BITMAP), &bitTBarrier2);
+
+    // Item_BigHP
+    hHpItem = (HBITMAP)LoadImage(NULL, TEXT("images/Item_HP.bmp"),
+        IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+    GetObject(hHpItem, sizeof(BITMAP), &bitHpItem);
+
+    // Item_SmallHP
+    hHp2Item = (HBITMAP)LoadImage(NULL, TEXT("images/Item_HP2.bmp"),
+        IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+    GetObject(hHp2Item, sizeof(BITMAP), &bitHp2Item);
 
     /*for (int i = 0; i < 7; i++)
     {
@@ -115,7 +139,7 @@ void cMap::CreateObject()
         obj.push_back(newObj);
     }
 
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 21; i++)
     {
         newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
 
@@ -133,7 +157,7 @@ void cMap::CreateObject()
     }
     
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 11; i++)
     {
         newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
         obj.push_back(newObj);
@@ -194,9 +218,7 @@ void cMap::CreateObject()
 
     xObject += 140;
     
-
-    
-    for (int i = 0; i < 15; i++)
+    for (int i = 0; i < 16; i++)
     {
         newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
         obj.push_back(newObj);
@@ -215,7 +237,7 @@ void cMap::CreateObject()
         obj.push_back(newObj);
     }
 
-    for (int i = 0; i < 15; i++)
+    for (int i = 0; i < 16; i++)
     {
         newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
 
@@ -234,9 +256,9 @@ void cMap::CreateObject()
 
         obj.push_back(newObj);
     }
-    */
     
-    for (int i = 0; i < 5; i++)
+    
+    for (int i = 0; i < 6; i++)
     {
         newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
 
@@ -244,8 +266,8 @@ void cMap::CreateObject()
     }
 
     xObject += 140;
-
-    // 더블 점프 - 둥근 모양
+    
+    // 둥근 모양
     for (int i = 0; i < 6; i++)
     {
         for (int j = 0; j < 5; j++)
@@ -287,6 +309,156 @@ void cMap::CreateObject()
         }
 
         xObject += 300;
+    }
+    
+
+    for (int i = 0; i < 16; i++)
+    {
+        newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
+
+        obj.push_back(newObj);
+
+    }
+
+    // 하단 장애물 - 더블 점프
+    for (int i = 0; i < 7; i++)
+    {
+        if (i == 0 || i == 6)
+            newObj = { { xObject += 60, 380 }, 0, 20, hRJellyImg, bitRJelly };
+        else if (i == 1 || i == 5)
+            newObj = { { xObject += 60, 260 }, 0, 20, hRJellyImg, bitRJelly };
+        else if (i == 2 || i == 4)
+            newObj = { { xObject += 60, 200 }, 0, 30, hAJellyImg, bitAJelly };
+        else if (i == 3)
+            newObj = { { xObject - 20, 370 }, 10, 0, hB2Barrier, bitB2Barrier };
+
+        obj.push_back(newObj);
+    }
+    
+    for (int i = 0; i < 16; i++)
+    {
+        newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
+
+        obj.push_back(newObj);
+    }
+
+    // 하단 장애물 - 더블 점프
+    for (int i = 0; i < 7; i++)
+    {
+        if (i == 0 || i == 6)
+            newObj = { { xObject += 60, 380 }, 0, 20, hRJellyImg, bitRJelly };
+        else if (i == 1 || i == 5)
+            newObj = { { xObject += 60, 260 }, 0, 20, hRJellyImg, bitRJelly };
+        else if (i == 2 || i == 4)
+            newObj = { { xObject += 60, 200 }, 0, 30, hAJellyImg, bitAJelly };
+        else if (i == 3)
+            newObj = { { xObject - 20, 370 }, 20, 0, hB2Barrier, bitB2Barrier };
+
+        obj.push_back(newObj);
+    }
+    
+    for (int i = 0; i < 11; i++)
+    {
+        newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
+
+        obj.push_back(newObj);
+    }
+
+    xObject += 250;
+    */
+
+    // 하단 장애물X - 더블 점프
+    for (int i = 0; i < 7; i++)
+    {
+        if (i == 0 || i == 6)
+        {
+            newObj = { { xObject += 40, 410 }, 0, 10, hJelly2Img, bitJelly2 };
+            obj.push_back(newObj);
+            newObj = { { xObject, 365 }, 0, 10, hJelly2Img, bitJelly2 };
+        }
+        else if (i == 1 || i == 5)
+        {
+            newObj = { { xObject += 40, 365 }, 0, 10, hJelly2Img, bitJelly2 };
+            obj.push_back(newObj);
+            newObj = { { xObject, 320 }, 0, 10, hJelly2Img, bitJelly2 };
+        }
+        else if (i == 2 || i == 4)
+        {
+            newObj = { { xObject += 40, 320 }, 0, 10, hJelly2Img, bitJelly2 };
+            obj.push_back(newObj);
+            newObj = { { xObject, 275 }, 0, 10, hJelly2Img, bitJelly2 };
+        }
+        else if (i == 3)
+        {
+            newObj = { { xObject += 55, 220 }, 0, 50, hFJellyImg, bitFJelly };
+            xObject += 40;
+        }
+
+        obj.push_back(newObj);
+    }
+
+    xObject += 200;
+
+    // 하단 장애물X - 더블 점프
+    for (int i = 0; i < 7; i++)
+    {
+        if (i == 0 || i == 6)
+        {
+            newObj = { { xObject += 40, 410 }, 0, 10, hJellyImg, bitJelly };
+            obj.push_back(newObj);
+            newObj = { { xObject, 365 }, 0, 10, hJellyImg, bitJelly };
+        }
+        else if (i == 1 || i == 5)
+        {
+            newObj = { { xObject += 40, 365 }, 0, 10, hJellyImg, bitJelly };
+            obj.push_back(newObj);
+            newObj = { { xObject, 320 }, 0, 10, hJellyImg, bitJelly };
+        }
+        else if (i == 2 || i == 4)
+        {
+            newObj = { { xObject += 40, 320 }, 0, 10, hJellyImg, bitJelly };
+            obj.push_back(newObj);
+            newObj = { { xObject, 275 }, 0, 10, hJellyImg, bitJelly };
+        }
+        else if (i == 3)
+        {
+            newObj = { { xObject += 55, 220 }, 0, 40, hCJellyImg, bitCJelly };
+            xObject += 40;
+        }
+
+        obj.push_back(newObj);
+    }
+
+    xObject += 200;
+
+    // 하단 장애물X - 더블 점프 + 체력
+    for (int i = 0; i < 7; i++)
+    {
+        if (i == 0 || i == 6)
+        {
+            newObj = { { xObject += 40, 410 }, 0, 10, hJelly2Img, bitJelly2 };
+            obj.push_back(newObj);
+            newObj = { { xObject, 365 }, 0, 10, hJelly2Img, bitJelly2 };
+        }
+        else if (i == 1 || i == 5)
+        {
+            newObj = { { xObject += 40, 365 }, 0, 10, hJelly2Img, bitJelly2 };
+            obj.push_back(newObj);
+            newObj = { { xObject, 320 }, 0, 10, hJelly2Img, bitJelly2 };
+        }
+        else if (i == 2 || i == 4)
+        {
+            newObj = { { xObject += 40, 320 }, 0, 10, hJelly2Img, bitJelly2 };
+            obj.push_back(newObj);
+            newObj = { { xObject, 275 }, 0, 10, hJelly2Img, bitJelly2 };
+        }
+        else if (i == 3)
+        {
+            newObj = { { xObject += 40, 220 }, -20, 0, hHp2Item, bitHp2Item};
+            xObject += 50;
+        }
+
+        obj.push_back(newObj);
     }
 }
 
