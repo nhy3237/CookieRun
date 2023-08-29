@@ -27,12 +27,16 @@ private:
 
 	HBITMAP hJellyImg;
 	BITMAP bitJelly;
+	HBITMAP hJelly2Img;
+	BITMAP bitJelly2;
 	HBITMAP hRJellyImg;
 	BITMAP bitRJelly;
 	HBITMAP hAJellyImg;
 	BITMAP bitAJelly;
 	HBITMAP hCJellyImg;
 	BITMAP bitCJelly;
+	HBITMAP hFJellyImg;
+	BITMAP bitFJelly;
 
 	HBITMAP hBBarrier;
 	BITMAP bitBBarrier;

@@ -162,7 +162,9 @@
     <Image Include="images\Icon_GingerBrave.ico" />
     <Image Include="images\Jelly_Apple.bmp" />
     <Image Include="images\Jelly_Basic.bmp" />
+    <Image Include="images\Jelly_Basic2.bmp" />
     <Image Include="images\Jelly_Cherry.bmp" />
+    <Image Include="images\Jelly_Flower.bmp" />
     <Image Include="images\Jelly_Rainbow.bmp" />
     <Image Include="images\Load.bmp" />
     <Image Include="images\UI_Gauge.bmp" />

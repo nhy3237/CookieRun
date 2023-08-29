@@ -56,6 +56,11 @@ void cMap::CreateObject()
         IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
     GetObject(hJellyImg, sizeof(BITMAP), &bitJelly);
 
+    // Jelly2
+    hJelly2Img = (HBITMAP)LoadImage(NULL, TEXT("images/Jelly_Basic2.bmp"),
+        IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+    GetObject(hJelly2Img, sizeof(BITMAP), &bitJelly2);
+
     // RainbowJelly
     hRJellyImg = (HBITMAP)LoadImage(NULL, TEXT("images/Jelly_Rainbow.bmp"),
         IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
@@ -64,14 +69,17 @@ void cMap::CreateObject()
     // AppleJelly
     hAJellyImg = (HBITMAP)LoadImage(NULL, TEXT("images/Jelly_Apple.bmp"),
         IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-
     GetObject(hAJellyImg, sizeof(BITMAP), &bitAJelly);
 
     // CherryJelly
     hCJellyImg = (HBITMAP)LoadImage(NULL, TEXT("images/Jelly_Cherry.bmp"),
         IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-
     GetObject(hCJellyImg, sizeof(BITMAP), &bitCJelly);
+
+    // FlowerJelly
+    hFJellyImg = (HBITMAP)LoadImage(NULL, TEXT("images/Jelly_Flower.bmp"),
+        IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+    GetObject(hFJellyImg, sizeof(BITMAP), &bitFJelly);
 
     // Barrier_Bottom
     hBBarrier = (HBITMAP)LoadImage(NULL, TEXT("images/Barrier_Bottom.bmp"),
@@ -185,48 +193,48 @@ void cMap::CreateObject()
     }
 
     xObject += 140;
+    
+
+    
+    for (int i = 0; i < 15; i++)
+    {
+        newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
+        obj.push_back(newObj);
+    }
+
+    // 하단 장애물
+    for (int i = 0; i < 5; i++)
+    {
+        if (i == 0 || i == 4)
+            newObj = { { xObject += 60, 440 }, 0, 20, hRJellyImg, bitRJelly };
+        else if (i == 2)
+            newObj = { { xObject - 20, 500 }, 10, 0, hBBarrier, bitBBarrier };
+        else
+            newObj = { { xObject += 60, 390 }, 0, 30, hAJellyImg, bitAJelly };
+
+        obj.push_back(newObj);
+    }
+
+    for (int i = 0; i < 15; i++)
+    {
+        newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
+
+        obj.push_back(newObj);
+    }
+
+    // 하단 장애물
+    for (int i = 0; i < 5; i++)
+    {
+        if (i == 0 || i == 4)
+            newObj = { { xObject += 60, 440 }, 0, 20, hRJellyImg, bitRJelly };
+        else if (i == 2)
+            newObj = { { xObject - 20, 500 }, 10, 0, hBBarrier, bitBBarrier };
+        else
+            newObj = { { xObject += 60, 390 }, 0, 30, hAJellyImg, bitAJelly };
+
+        obj.push_back(newObj);
+    }
     */
-
-    
-    for (int i = 0; i < 15; i++)
-    {
-        newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
-        obj.push_back(newObj);
-    }
-
-    // 하단 장애물
-    for (int i = 0; i < 5; i++)
-    {
-        if (i == 0 || i == 4)
-            newObj = { { xObject += 60, 440 }, 0, 20, hRJellyImg, bitRJelly };
-        else if (i == 2)
-            newObj = { { xObject - 20, 500 }, 10, 0, hBBarrier, bitBBarrier };
-        else
-            newObj = { { xObject += 60, 390 }, 0, 30, hAJellyImg, bitAJelly };
-
-        obj.push_back(newObj);
-    }
-
-    for (int i = 0; i < 15; i++)
-    {
-        newObj = { {xObject += 70, 500}, 0, 10, hJellyImg, bitJelly };
-
-        obj.push_back(newObj);
-    }
-
-    // 하단 장애물
-    for (int i = 0; i < 5; i++)
-    {
-        if (i == 0 || i == 4)
-            newObj = { { xObject += 60, 440 }, 0, 20, hRJellyImg, bitRJelly };
-        else if (i == 2)
-            newObj = { { xObject - 20, 500 }, 10, 0, hBBarrier, bitBBarrier };
-        else
-            newObj = { { xObject += 60, 390 }, 0, 30, hAJellyImg, bitAJelly };
-
-        obj.push_back(newObj);
-    }
-    
     
     for (int i = 0; i < 5; i++)
     {
@@ -240,26 +248,41 @@ void cMap::CreateObject()
     // 더블 점프 - 둥근 모양
     for (int i = 0; i < 6; i++)
     {
-        for (int i = 0; i < 5; i++)
+        for (int j = 0; j < 5; j++)
         {
-            if (i == 0 || i == 4)
+            switch (j)
             {
+            case 0:
                 newObj = { {xObject += 35, 370}, 0, 10, hJellyImg, bitJelly };
                 obj.push_back(newObj);
-                newObj = { {xObject, 420}, 0, 10, hJellyImg, bitJelly };
-            }
-            else if (i == 2)
-            {
-                newObj = { {xObject += 20, 390}, 0, 40, hCJellyImg, bitCJelly };
-                obj.push_back(newObj);
-                xObject += 15;
-            }
-            else
-            {
-                newObj = { {xObject += 35, 340}, 0, 10, hJellyImg, bitJelly };
+                newObj = { {xObject, 420}, 0, 10, hJelly2Img, bitJelly2 };
+
+                break;
+            case 1:
+                newObj = { {xObject += 35, 340}, 0, 10, hJelly2Img, bitJelly2 };
                 obj.push_back(newObj);
                 newObj = { {xObject, 450}, 0, 10, hJellyImg, bitJelly };
+                break;
+            case 2:
+                if (i % 2 == 0)
+                    newObj = { {xObject += 30, 390}, 0, 50, hFJellyImg, bitFJelly };
+                else
+                    newObj = { {xObject += 20, 390}, 0, 40, hCJellyImg, bitCJelly };
+                obj.push_back(newObj);
+                xObject += 15;
+                break;
+            case 3:
+                newObj = { {xObject += 35, 340}, 0, 10, hJellyImg, bitJelly };
+                obj.push_back(newObj);
+                newObj = { {xObject, 450}, 0, 10, hJelly2Img, bitJelly2 };
+                break;
+            case 4:
+                newObj = { {xObject += 35, 370}, 0, 10, hJelly2Img, bitJelly2 };
+                obj.push_back(newObj);
+                newObj = { {xObject, 420}, 0, 10, hJellyImg, bitJelly };
+                break;
             }
+
             obj.push_back(newObj);
         }
 

@@ -108,5 +108,11 @@
     <Image Include="images\Jelly_Cherry.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="images\Jelly_Basic2.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="images\Jelly_Flower.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>
