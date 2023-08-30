@@ -29,6 +29,13 @@ private:
 	enum { RUN, JUMP, SLIDE };
 
 	int playerHealth;
+	int score;
+
+	// °¡»ó ÁÂÇ¥
+	int vScreenMinX;
+	int vScreenMaxX;
+	int vPlayerMinX;
+	int vPlayerMaxX;
 
 public:
 	void Load(HDC hdc);
@@ -39,4 +46,5 @@ public:
 
 	void UpdateMove();
 	void UpdateHealth();
+	void UpdateScore();
 };

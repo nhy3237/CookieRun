@@ -53,6 +53,9 @@
     <ClCompile Include="temp.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="temp_map.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CookieRun.rc">
@@ -112,6 +115,21 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="images\Jelly_Flower.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="images\Barrier_bottom2.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="images\Barrier_bottom3.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="images\Item_HP2.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="images\Item_Speed.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="images\Jelly_Star.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

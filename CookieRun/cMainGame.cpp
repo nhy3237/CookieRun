@@ -3,6 +3,7 @@
 cMainGame::cMainGame()
 {
     playerHealth = 100;
+    score = 0;
 }
 
 cMainGame::~cMainGame()
@@ -31,6 +32,11 @@ void cMainGame::Setup(HWND hWnd)
 {
     GetClientRect(hWnd, &rectView);
 
+    vScreenMinX = rectView.left;
+    vScreenMaxX = rectView.right;
+    vPlayerMinX = cookie.GetPlayerX() - 50;
+    vPlayerMaxX = cookie.GetPlayerX() + 50;
+
     cookie.CreateBitmap();
     map.CreateBg();
     map.CreateUI();
@@ -39,6 +45,11 @@ void cMainGame::Setup(HWND hWnd)
 
 void cMainGame::Update(HWND hWnd)
 {
+    vScreenMinX += 13;
+    vScreenMaxX += 13;
+    vPlayerMinX += 13;
+    vPlayerMaxX += 13;
+
     UpdateMove();
     cookie.UpdateFrame();
     map.UpdateFrame();
@@ -58,8 +69,10 @@ void cMainGame::Render(HDC hdc)
     }
     hOldBitmap = (HBITMAP)SelectObject(hMemDC, hDoubleBufferImg);
 
-    map.DrawBitmap(hMemDC, playerHealth);
+    map.DrawBitmap(hMemDC, playerHealth, vScreenMinX, vScreenMaxX);
     cookie.DrawBitmap(hMemDC);
+
+    
 
     TransparentBlt(hdc, 0, 0, rectView.right, rectView.bottom,
         hMemDC, 0, 0, rectView.right, rectView.bottom,
@@ -88,4 +101,8 @@ void cMainGame::UpdateMove()
 void cMainGame::UpdateHealth()
 {
     playerHealth = cookie.GetHealth();
+}
+
+void cMainGame::UpdateScore()
+{
 }

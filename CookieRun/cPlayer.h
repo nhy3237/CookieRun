@@ -38,4 +38,5 @@ public:
 	void UpdateFrame();
 
 	int GetHealth();
+	int GetPlayerX();
 };

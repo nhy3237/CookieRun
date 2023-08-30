@@ -46,7 +46,12 @@ void cPlayer::DrawBitmap(HDC hdc)
 
     TransparentBlt(hdc, ptCookie.x, ptCookie.y, ptSize.x, ptSize.y, 
                     hMemDC, ptFrame.x, ptFrame.y, ptSize.x - 2, ptSize.y - 2, NULL);
+    
+    SelectObject(hdc, GetStockObject(NULL_BRUSH));
+    Rectangle(hdc, 270, 460, 370, 620); // run
 
+    Rectangle(hdc, 270 - 40, 460 + 60, 370, 620); // slide
+    
     SelectObject(hMemDC, hOldBitmap);
     DeleteDC(hMemDC);
 }
@@ -74,6 +79,8 @@ void cPlayer::Move(int cookieState)
             curJump = false;
             curDblJump = false;
             dblJumpFlg = false;
+
+            ptCookie.x = 100;
         }
         break;
 
@@ -87,6 +94,7 @@ void cPlayer::Move(int cookieState)
 
             cntJump = 0;
             curJump = true;
+            ptCookie.x += 20;
             curDblJump = false;
             dblJumpFlg = false;
 
@@ -102,6 +110,7 @@ void cPlayer::Move(int cookieState)
                 numCurFrame = runFrameMin;
 
                 curJump = false;
+                ptCookie.x = 100;
             }
             else if (ptCookie.y != cookieHeight && dblJumpFlg && !curDblJump)
             {
@@ -128,6 +137,8 @@ void cPlayer::Move(int cookieState)
             curJump = false;
             curDblJump = false;
             dblJumpFlg = false;
+
+            ptCookie.x = 100;
         }
         break;
     }
@@ -140,6 +151,7 @@ void cPlayer::UpdateFrame()
     {
         numCurFrame = runFrameMin;
     }
+    
 
     if (cookieState == JUMP)
     {
@@ -158,4 +170,9 @@ void cPlayer::UpdateFrame()
 int cPlayer::GetHealth()
 {
     return health -= 1;
+}
+
+int cPlayer::GetPlayerX()
+{
+    return ptCookie.x;
 }
