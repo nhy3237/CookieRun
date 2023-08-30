@@ -18,7 +18,12 @@ cMainGame* g_pMainGame;
 #define LOAD_TIMER 1
 #define GAME_TIMER 2
 #define HEALTH_TIMER 3
-bool start = false;
+bool startFlag = false;
+bool gameFlag = false;
+bool endFlag = false;
+
+RECT clickRect = { 650, 545, 985, 645 };
+POINT mousePos;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -56,11 +61,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     SetTimer(g_hWnd, LOAD_TIMER, 5000, NULL);
     SetTimer(g_hWnd, GAME_TIMER, 40, NULL);
-
-    // test
-    start = true;
-    SetTimer(g_hWnd, HEALTH_TIMER, 1000, NULL);
-    //
 
     MSG msg;
 
@@ -167,16 +167,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_TIMER:
         if (wParam == LOAD_TIMER)
         {
-            // test
-            /*start = true;
+            startFlag = true;
 
-            SetTimer(g_hWnd, HEALTH_TIMER, 1000, NULL);
-            KillTimer(hWnd, LOAD_TIMER);*/
+            
+            KillTimer(hWnd, LOAD_TIMER);
         }
-        else if (wParam == GAME_TIMER && start)
+        else if (wParam == GAME_TIMER && gameFlag)
         {
             if (g_pMainGame)
+            {
                 g_pMainGame->Update(g_hWnd);
+                endFlag = g_pMainGame->GetHealth();
+            }
+
         }
         else if(wParam == HEALTH_TIMER)
         {
@@ -188,6 +191,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         
         break;
 
+    case WM_LBUTTONDOWN:
+        mousePos = { LOWORD(lParam), HIWORD(lParam) };
+
+        if(startFlag && !endFlag)
+        {
+            if (mousePos.x >= clickRect.left && mousePos.x <= clickRect.right
+                && mousePos.y >= clickRect.top && mousePos.y <= clickRect.bottom)
+            {
+                gameFlag = true;
+                SetTimer(g_hWnd, HEALTH_TIMER, 1000, NULL);
+            }
+        }
+        else if (startFlag && endFlag)
+        {
+            if (mousePos.x >= clickRect.left && mousePos.x <= clickRect.right
+                && mousePos.y >= clickRect.top && mousePos.y <= clickRect.bottom)
+                PostQuitMessage(0);
+        }
+        break;
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -214,8 +236,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             if (g_pMainGame)
             {
-                if (!start)
-                    g_pMainGame->Load(hdc);
+                if (!startFlag && !gameFlag)
+                    g_pMainGame->LoadScreen(hdc);
+                else if (startFlag && !gameFlag)
+                    g_pMainGame->StartScreen(hdc);
                 else
                     g_pMainGame->Render(hdc);
             }

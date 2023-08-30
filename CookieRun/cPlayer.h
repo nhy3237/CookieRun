@@ -25,6 +25,10 @@ private:
 	bool curDblJump;
 	bool dblJumpFlg;
 
+	RECT runRect;
+	RECT slideRect;
+	RECT curRect;
+
 	int health;
 
 public:
@@ -38,5 +42,5 @@ public:
 	void UpdateFrame();
 
 	int GetHealth();
-	int GetPlayerX();
+	RECT GetPlayerRect();
 };

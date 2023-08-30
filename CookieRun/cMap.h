@@ -35,7 +35,8 @@ private:
 	Object* newObj;
 	vector <ObjImageInfo*> ObjImg;
 	ObjImageInfo* newObjImg;
-	int objImgCnt;
+	int cntObjImg;
+	int cntScreenObj;
 
 	HBITMAP hGaugeImg;
 	BITMAP bitGauge;
@@ -47,10 +48,11 @@ private:
 	POINT ptBridge;
 	int backCurFrame;
 	int bridgeCurFrame;
-	int cntObject;
 
 	int damage;
 	int score;
+	RECT playerRect;
+	bool Death;
 
 public:
 	cMap();
@@ -59,11 +61,13 @@ public:
 	void CreateBg();
 	void CreateUI();
 	void CreateObject();
-	void DrawBitmap(HDC hdc, int health, int vScreenMinX, int vScreenMaxX);
+	void DrawBitmap(HDC hdc, int health, int vScreenMinX, int vScreenMaxX, RECT playerRect);
 	ObjImageInfo LoadObjImgInfo(const TCHAR* filename);
 
 	void UpdateFrame();
-	void OnCollision();
 	int GetDamage();
 	int GetScore();
+	bool GetDeath();
+
+	void OnCollision();
 };

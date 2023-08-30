@@ -150,6 +150,7 @@
     </ClCompile>
     <ClCompile Include="temp_map.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@
     <Image Include="images\Bg_Bridge.bmp" />
     <Image Include="images\Cookie_Apple.bmp" />
     <Image Include="images\Cookie_Brave.bmp" />
+    <Image Include="images\End.bmp" />
     <Image Include="images\Icon_GingerBrave.ico" />
     <Image Include="images\Item_HP2.bmp" />
     <Image Include="images\Item_Speed.bmp" />
@@ -176,9 +178,13 @@
     <Image Include="images\Jelly_Rainbow.bmp" />
     <Image Include="images\Jelly_Star.bmp" />
     <Image Include="images\Load.bmp" />
+    <Image Include="images\Start.bmp" />
     <Image Include="images\UI_Gauge.bmp" />
     <Image Include="images\UI_HeartLife.bmp" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="font\CookieRun Regular.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

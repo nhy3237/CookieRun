@@ -17,6 +17,10 @@ cPlayer::cPlayer()
     cntJump = 0;
 
     health = 100;
+
+    runRect = { 270, 460, 370, 620 };
+    slideRect = { 230, 520, 370, 620 };
+    curRect = runRect;
 }
 
 cPlayer::~cPlayer()
@@ -47,11 +51,6 @@ void cPlayer::DrawBitmap(HDC hdc)
     TransparentBlt(hdc, ptCookie.x, ptCookie.y, ptSize.x, ptSize.y, 
                     hMemDC, ptFrame.x, ptFrame.y, ptSize.x - 2, ptSize.y - 2, NULL);
     
-    SelectObject(hdc, GetStockObject(NULL_BRUSH));
-    Rectangle(hdc, 270, 460, 370, 620); // run
-
-    Rectangle(hdc, 270 - 40, 460 + 60, 370, 620); // slide
-    
     SelectObject(hMemDC, hOldBitmap);
     DeleteDC(hMemDC);
 }
@@ -81,6 +80,8 @@ void cPlayer::Move(int cookieState)
             dblJumpFlg = false;
 
             ptCookie.x = 100;
+
+            curRect = runRect;
         }
         break;
 
@@ -95,6 +96,8 @@ void cPlayer::Move(int cookieState)
             cntJump = 0;
             curJump = true;
             ptCookie.x += 20;
+            curRect.top -= 12;
+            curRect.bottom -= 17;
             curDblJump = false;
             dblJumpFlg = false;
 
@@ -111,6 +114,8 @@ void cPlayer::Move(int cookieState)
 
                 curJump = false;
                 ptCookie.x = 100;
+
+                curRect = runRect;
             }
             else if (ptCookie.y != cookieHeight && dblJumpFlg && !curDblJump)
             {
@@ -139,6 +144,8 @@ void cPlayer::Move(int cookieState)
             dblJumpFlg = false;
 
             ptCookie.x = 100;
+
+            curRect = slideRect;
         }
         break;
     }
@@ -151,14 +158,18 @@ void cPlayer::UpdateFrame()
     {
         numCurFrame = runFrameMin;
     }
-    
-
     if (cookieState == JUMP)
     {
         if (cntJump < 13)
+        {
+            curRect.top -= 12;
+            curRect.bottom -= 12;
             ptCookie.y -= 12;
+        }
         else if (cntJump > 13 && ptCookie.y != cookieHeight)
         {
+            curRect.top += 12;
+            curRect.bottom += 12;
             ptCookie.y += 12;
             if (curDblJump) numCurFrame = 5;
             if (ptCookie.y == cookieHeight) numCurFrame = 6;
@@ -172,7 +183,7 @@ int cPlayer::GetHealth()
     return health -= 1;
 }
 
-int cPlayer::GetPlayerX()
+RECT cPlayer::GetPlayerRect()
 {
-    return ptCookie.x;
+    return curRect;
 }

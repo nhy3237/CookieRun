@@ -5,8 +5,7 @@
 #include "cPlayer.h"
 #include "cMap.h"
 #include "string"
-
-#define TIMER 123
+#include "iostream"
 
 using namespace std;
 
@@ -17,8 +16,8 @@ public:
 	~cMainGame();
 
 private:
-	HBITMAP hLoadImg;
-	BITMAP bitLoad;
+	HBITMAP hSceneImg;
+	BITMAP bitScene;
 
 	HBITMAP hDoubleBufferImg;
 	RECT rectView;
@@ -34,11 +33,12 @@ private:
 	// °¡»ó ÁÂÇ¥
 	int vScreenMinX;
 	int vScreenMaxX;
-	int vPlayerMinX;
-	int vPlayerMaxX;
+	RECT vPlayerRect;
 
 public:
-	void Load(HDC hdc);
+	void LoadScreen(HDC hdc);
+	void StartScreen(HDC hdc);
+	void EndScreen(HDC hdc);
 
 	void Setup(HWND hWnd);
 	void Update(HWND hWnd);
@@ -46,5 +46,6 @@ public:
 
 	void UpdateMove();
 	void UpdateHealth();
-	void UpdateScore();
+
+	bool GetHealth();
 };

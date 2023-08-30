@@ -7,12 +7,13 @@ cMap::cMap()
 
     ptBridge.y = 622;
 
-    cntObject = 0;
+    cntScreenObj = 0;
+    Death = false;
 }
 
 cMap::~cMap()
 {
-    for (int i = 0; i < objImgCnt; ++i) {
+    for (int i = 0; i < cntObjImg; ++i) {
         if (ObjImg[i]->hObjImg) {
             DeleteObject(ObjImg[i]->hObjImg);
         }
@@ -45,6 +46,8 @@ void cMap::CreateUI()
     hHeartImg = (HBITMAP)LoadImage(NULL, TEXT("images/UI_HeartLife.bmp"),
         IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
     GetObject(hHeartImg, sizeof(BITMAP), &bitHeart);
+
+    AddFontResourceEx(L"font/CookieRun Regular.ttf", FR_PRIVATE, NULL);
 }
 
 void cMap::CreateObject()
@@ -66,9 +69,9 @@ void cMap::CreateObject()
         TEXT("images/Item_Speed.bmp")
     };
 
-    objImgCnt = sizeof(imageFiles) / sizeof(imageFiles[0]);
+    cntObjImg = sizeof(imageFiles) / sizeof(imageFiles[0]);
 
-    for (int i = 0; i < objImgCnt; ++i) {
+    for (int i = 0; i < cntObjImg; ++i) {
         newObjImg = new ObjImageInfo(LoadObjImgInfo(imageFiles[i]));
         ObjImg.push_back(newObjImg);
     }
@@ -100,10 +103,12 @@ void cMap::CreateObject()
     }
 }
 
-void cMap::DrawBitmap(HDC hdc, int health, int vScreenMinX, int vScreenMaxX)
+void cMap::DrawBitmap(HDC hdc, int health, int vScreenMinX, int vScreenMaxX, RECT playerRect)
 {
     HDC hMemDC;
     HBITMAP hOldBitmap;
+
+    this->playerRect = playerRect;
 
     // Background
     hMemDC = CreateCompatibleDC(hdc);
@@ -134,16 +139,22 @@ void cMap::DrawBitmap(HDC hdc, int health, int vScreenMinX, int vScreenMaxX)
     DeleteDC(hMemDC);
 
     // Object
+    cntScreenObj = 0;
+
     for (int i = 0; i < obj.size(); i++)
     {
-        if (obj[i]->ptObj.x >= vScreenMinX - 100 && obj[i]->ptObj.x <= vScreenMaxX)
+        if (obj[i]->ptObj.x > vScreenMaxX) break;
+
+        if (obj[i]->ptObj.x >= vScreenMinX - 100)
         {
             hMemDC = CreateCompatibleDC(hdc);
             hOldBitmap = (HBITMAP)SelectObject(hMemDC, ObjImg[obj[i]->idxObjImg]->hObjImg);
 
-            TransparentBlt(hdc, obj[i]->ptObj.x - cntObject, obj[i]->ptObj.y,
+            TransparentBlt(hdc, obj[i]->ptObj.x - vScreenMinX, obj[i]->ptObj.y,
                 ObjImg[obj[i]->idxObjImg]->bitObjImg.bmWidth, ObjImg[obj[i]->idxObjImg]->bitObjImg.bmHeight,
                 hMemDC, 0, 0, ObjImg[obj[i]->idxObjImg]->bitObjImg.bmWidth, ObjImg[obj[i]->idxObjImg]->bitObjImg.bmHeight, NULL);
+            
+            cntScreenObj++;
 
             SelectObject(hMemDC, hOldBitmap);
             DeleteDC(hMemDC);
@@ -153,19 +164,34 @@ void cMap::DrawBitmap(HDC hdc, int health, int vScreenMinX, int vScreenMaxX)
             obj.erase(obj.begin() + i);
         }
     }
+    OnCollision();
     
     // Gauge
     hMemDC = CreateCompatibleDC(hdc);
     hOldBitmap = (HBITMAP)SelectObject(hMemDC, hGaugeImg);
    
-    TransparentBlt(hdc, 450, 20, bitGauge.bmWidth - bitGauge.bmWidth / 100 * (100 - health), bitGauge.bmHeight,
-        hMemDC, 0, 0, bitGauge.bmWidth - bitGauge.bmWidth / 100 * (100 - health), bitGauge.bmHeight, NULL);
+    TransparentBlt(hdc, 450, 20, bitGauge.bmWidth - bitGauge.bmWidth / 100 * (100 - health) - damage, bitGauge.bmHeight,
+        hMemDC, 0, 0, bitGauge.bmWidth - bitGauge.bmWidth / 100 * (100 - health) - damage, bitGauge.bmHeight, NULL);
+
+    if (bitGauge.bmWidth - bitGauge.bmWidth / 100 * (100 - health) - damage < -50) Death = true;
 
     SelectObject(hMemDC, hOldBitmap);
     DeleteDC(hMemDC);
 
-    LPCWSTR text = L"SCORE";
-    TextOut(hdc, 10, 10, text, wcslen(text));
+    HFONT hFont = CreateFont(30, 0, 0, 0, FW_NORMAL, FALSE, TRUE, FALSE, DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+        DEFAULT_PITCH | FF_DONTCARE, L"CookieRun Regular");
+
+    SetTextColor(hdc, RGB(255, 255, 255));
+    SelectObject(hdc, hFont);
+    SetBkMode(hdc, TRANSPARENT);
+
+    wstringstream stream;
+    stream << L"SCORE : " << score;
+    wstring text = stream.str();
+    TextOut(hdc, 750 - ((text.length() - 9) * 5), 75, text.c_str(), text.length());
+
+    ReleaseDC(NULL, hdc);
 
     // Heart
     hMemDC = CreateCompatibleDC(hdc);
@@ -199,13 +225,6 @@ void cMap::UpdateFrame()
         bridgeCurFrame = 17;
     else
         bridgeCurFrame += 13;
-
-    cntObject += 13;
-}
-
-void cMap::OnCollision()
-{
-
 }
 
 int cMap::GetDamage()
@@ -216,4 +235,25 @@ int cMap::GetDamage()
 int cMap::GetScore()
 {
     return score;
+}
+
+bool cMap::GetDeath()
+{
+    return Death;
+}
+
+void cMap::OnCollision()
+{
+    for (int i = 0; i < cntScreenObj; i++)
+    {
+        if (obj[i]->ptObj.x >= playerRect.left && obj[i]->ptObj.x <= playerRect.right
+            && obj[i]->ptObj.y >= playerRect.top && obj[i]->ptObj.y <= playerRect.bottom)
+        {
+            score += obj[i]->score;
+            damage += obj[i]->damage;
+
+            if(obj[i]->damage == 0)
+                obj.erase(obj.begin() + i);
+        }
+    }
 }

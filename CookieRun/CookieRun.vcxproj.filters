@@ -132,5 +132,16 @@
     <Image Include="images\Jelly_Star.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="images\End.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="images\Start.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="font\CookieRun Regular.ttf">
+      <Filter>리소스 파일</Filter>
+    </Font>
   </ItemGroup>
 </Project>

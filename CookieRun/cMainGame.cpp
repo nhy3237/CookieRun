@@ -8,21 +8,68 @@ cMainGame::cMainGame()
 
 cMainGame::~cMainGame()
 {
-    DeleteObject(hLoadImg);
+    DeleteObject(hSceneImg);
     DeleteObject(hDoubleBufferImg);
 }
 
-void cMainGame::Load(HDC hdc)
+void cMainGame::LoadScreen(HDC hdc)
 {
-    hLoadImg = (HBITMAP)LoadImage(NULL, TEXT("images/Load.bmp"),
+    hSceneImg = (HBITMAP)LoadImage(NULL, TEXT("images/Load.bmp"),
         IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
-    GetObject(hLoadImg, sizeof(BITMAP), &bitLoad);
+    GetObject(hSceneImg, sizeof(BITMAP), &bitScene);
 
     HDC hMemDC = CreateCompatibleDC(hdc);
-    HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC, hLoadImg);
+    HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC, hSceneImg);
 
-    TransparentBlt(hdc, 0, 0, bitLoad.bmWidth, bitLoad.bmHeight,
-        hMemDC, 0, 0, bitLoad.bmWidth, bitLoad.bmHeight, NULL);
+    TransparentBlt(hdc, 0, 0, bitScene.bmWidth, bitScene.bmHeight,
+        hMemDC, 0, 0, bitScene.bmWidth, bitScene.bmHeight, NULL);
+
+    SelectObject(hMemDC, hOldBitmap);
+    DeleteDC(hMemDC);
+}
+
+void cMainGame::StartScreen(HDC hdc)
+{
+    hSceneImg = (HBITMAP)LoadImage(NULL, TEXT("images/Start.bmp"),
+        IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+    GetObject(hSceneImg, sizeof(BITMAP), &bitScene);
+
+    HDC hMemDC = CreateCompatibleDC(hdc);
+    HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC, hSceneImg);
+
+    TransparentBlt(hdc, 0, 0, bitScene.bmWidth, bitScene.bmHeight,
+        hMemDC, 0, 0, bitScene.bmWidth, bitScene.bmHeight, NULL);
+
+    SelectObject(hMemDC, hOldBitmap);
+    DeleteDC(hMemDC);
+}
+
+void cMainGame::EndScreen(HDC hdc)
+{
+    hSceneImg = (HBITMAP)LoadImage(NULL, TEXT("images/End2.bmp"),
+        IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+    GetObject(hSceneImg, sizeof(BITMAP), &bitScene);
+
+    HDC hMemDC = CreateCompatibleDC(hdc);
+    HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC, hSceneImg);
+
+    TransparentBlt(hdc, 0, 0, bitScene.bmWidth, bitScene.bmHeight,
+        hMemDC, 0, 0, bitScene.bmWidth, bitScene.bmHeight, NULL);
+
+    HFONT hFont = CreateFont(90, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+        DEFAULT_PITCH | FF_DONTCARE, L"CookieRun Bold");
+
+    SetTextColor(hdc, RGB(0, 0, 0));
+    SelectObject(hdc, hFont);
+    SetBkMode(hdc, RGB(0, 0, 0));
+
+    wstringstream stream;
+    stream << L"SCORE : " << score;
+    wstring text = stream.str();
+    TextOut(hdc, 600 - ((text.length() - 9) * 5), 300, text.c_str(), text.length());
+
+    ReleaseDC(NULL, hdc);
 
     SelectObject(hMemDC, hOldBitmap);
     DeleteDC(hMemDC);
@@ -34,25 +81,28 @@ void cMainGame::Setup(HWND hWnd)
 
     vScreenMinX = rectView.left;
     vScreenMaxX = rectView.right;
-    vPlayerMinX = cookie.GetPlayerX() - 50;
-    vPlayerMaxX = cookie.GetPlayerX() + 50;
+    vPlayerRect = cookie.GetPlayerRect();
 
     cookie.CreateBitmap();
     map.CreateBg();
     map.CreateUI();
     map.CreateObject();
+
+    AddFontResourceEx(L"font/CookieRun Bold.ttf", FR_PRIVATE, NULL);
 }
 
 void cMainGame::Update(HWND hWnd)
 {
     vScreenMinX += 13;
     vScreenMaxX += 13;
-    vPlayerMinX += 13;
-    vPlayerMaxX += 13;
 
     UpdateMove();
-    cookie.UpdateFrame();
     map.UpdateFrame();
+    cookie.UpdateFrame();
+    
+    vPlayerRect = cookie.GetPlayerRect();
+    vPlayerRect.left += vScreenMinX;
+    vPlayerRect.right += vScreenMinX;
 
     InvalidateRect(hWnd, NULL, false);
 }
@@ -69,10 +119,13 @@ void cMainGame::Render(HDC hdc)
     }
     hOldBitmap = (HBITMAP)SelectObject(hMemDC, hDoubleBufferImg);
 
-    map.DrawBitmap(hMemDC, playerHealth, vScreenMinX, vScreenMaxX);
-    cookie.DrawBitmap(hMemDC);
-
-    
+    if (score > 0)
+        EndScreen(hMemDC);
+    else
+    {
+        map.DrawBitmap(hMemDC, playerHealth, vScreenMinX, vScreenMaxX, vPlayerRect);
+        cookie.DrawBitmap(hMemDC);
+    }
 
     TransparentBlt(hdc, 0, 0, rectView.right, rectView.bottom,
         hMemDC, 0, 0, rectView.right, rectView.bottom,
@@ -103,6 +156,13 @@ void cMainGame::UpdateHealth()
     playerHealth = cookie.GetHealth();
 }
 
-void cMainGame::UpdateScore()
+bool cMainGame::GetHealth()
 {
+    if (map.GetDeath())
+    {
+        score = map.GetScore();
+        return true;
+    }
+    else
+        return false;
 }
