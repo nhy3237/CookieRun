@@ -4,6 +4,7 @@ cMainGame::cMainGame()
 {
     playerHealth = 100;
     score = 0;
+    bgmPlay = false;
 }
 
 cMainGame::~cMainGame()
@@ -46,6 +47,12 @@ void cMainGame::StartScreen(HDC hdc)
 
 void cMainGame::EndScreen(HDC hdc)
 {
+    if (!bgmPlay)
+    {
+        bgmPlay = true;
+        PlaySound(TEXT("bgm/Lobby2.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NODEFAULT | SND_LOOP);
+        }
+
     hSceneImg = (HBITMAP)LoadImage(NULL, TEXT("images/End2.bmp"),
         IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
     GetObject(hSceneImg, sizeof(BITMAP), &bitScene);

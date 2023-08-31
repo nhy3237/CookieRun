@@ -5,6 +5,9 @@
 #include "CookieRun.h"
 #include "cMainGame.h"
 
+#pragma comment(lib,"winmm.lib") 
+#include "MMSystem.h"
+
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -169,7 +172,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             startFlag = true;
 
-            
+            PlaySound(TEXT("bgm/Lobby2.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NODEFAULT | SND_LOOP);
             KillTimer(hWnd, LOAD_TIMER);
         }
         else if (wParam == GAME_TIMER && gameFlag)
@@ -200,6 +203,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 && mousePos.y >= clickRect.top && mousePos.y <= clickRect.bottom)
             {
                 gameFlag = true;
+
+                PlaySound(TEXT("bgm/GamePlay.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NODEFAULT | SND_LOOP);
                 SetTimer(g_hWnd, HEALTH_TIMER, 1000, NULL);
             }
         }

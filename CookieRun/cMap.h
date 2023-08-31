@@ -49,6 +49,8 @@ private:
 	int backCurFrame;
 	int bridgeCurFrame;
 
+	bool damageFlag;
+	int cntDamageTime;
 	int damage;
 	int score;
 	RECT playerRect;

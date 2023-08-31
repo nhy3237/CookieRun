@@ -7,6 +7,9 @@
 #include "string"
 #include "iostream"
 
+#pragma comment(lib,"winmm.lib") 
+#include "MMSystem.h"
+
 using namespace std;
 
 class cMainGame
@@ -34,6 +37,8 @@ private:
 	int vScreenMinX;
 	int vScreenMaxX;
 	RECT vPlayerRect;
+
+	bool bgmPlay;
 
 public:
 	void LoadScreen(HDC hdc);

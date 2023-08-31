@@ -7,6 +7,9 @@ cMap::cMap()
 
     ptBridge.y = 622;
 
+    damageFlag = true;
+    cntDamageTime = 0;
+
     cntScreenObj = 0;
     Death = false;
 }
@@ -225,6 +228,16 @@ void cMap::UpdateFrame()
         bridgeCurFrame = 17;
     else
         bridgeCurFrame += 13;
+    if (!damageFlag)
+    {
+        cntDamageTime++;
+
+        if (cntDamageTime > 3)
+        {
+            damageFlag = true;
+            cntDamageTime = 0;
+        }
+    }
 }
 
 int cMap::GetDamage()
@@ -246,14 +259,26 @@ void cMap::OnCollision()
 {
     for (int i = 0; i < cntScreenObj; i++)
     {
-        if (obj[i]->ptObj.x >= playerRect.left && obj[i]->ptObj.x <= playerRect.right
-            && obj[i]->ptObj.y >= playerRect.top && obj[i]->ptObj.y <= playerRect.bottom)
+        static RECT tmpRect;
+
+        RECT objRect = { obj[i]->ptObj.x, obj[i]->ptObj.y,
+                        obj[i]->ptObj.x + ObjImg[obj[i]->idxObjImg]->bitObjImg.bmWidth,
+                        obj[i]->ptObj.y + ObjImg[obj[i]->idxObjImg]->bitObjImg.bmHeight };
+
+        if(IntersectRect(&tmpRect, &objRect, &playerRect))
         {
             score += obj[i]->score;
-            damage += obj[i]->damage;
+            
+            if (damageFlag)
+            {
+                damage += obj[i]->damage;
+                damageFlag = false;
+            }
 
-            if(obj[i]->damage == 0)
+            if (obj[i]->damage <= 0)
                 obj.erase(obj.begin() + i);
         }
+
+        
     }
 }
