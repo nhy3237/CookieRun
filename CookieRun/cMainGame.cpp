@@ -144,6 +144,7 @@ void cMainGame::Render(HDC hdc)
 
 void cMainGame::UpdateMove()
 {
+    //if (score > 0) cookie.Move(DEATH);
     if (GetKeyState('J') & 0x8000)
     {
         cookie.Move(JUMP);

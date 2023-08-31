@@ -28,7 +28,7 @@ private:
 	cPlayer cookie;
 	cMap map;
 
-	enum { RUN, JUMP, SLIDE };
+	enum { RUN, JUMP, SLIDE, DEATH };
 
 	int playerHealth;
 	int score;

@@ -148,6 +148,18 @@ void cPlayer::Move(int cookieState)
             curRect = slideRect;
         }
         break;
+
+    /*case DEATH:
+        if (this->cookieState != DEATH)
+        {
+            frameRow = 4;
+            runFrameMin = 4;
+            runFrameMax = 5;
+            numCurFrame = runFrameMin;
+
+            this->cookieState = DEATH;
+        }
+        break;*/
     }
 }
 

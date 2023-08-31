@@ -123,7 +123,7 @@ void cMap::DrawBitmap(HDC hdc, int health, int vScreenMinX, int vScreenMaxX, REC
     TransparentBlt(hdc, (bitBack.bmWidth - backCurFrame) * 2, 0, bitBack.bmWidth * 2, bitBack.bmHeight * 2,
         hMemDC, 0, 0, bitBack.bmWidth, bitBack.bmHeight, NULL);
        
-	SelectObject(hMemDC, hOldBitmap);
+	SelectObject(hMemDC, hOldBitmap) ;
 	DeleteDC(hMemDC);
 
     // Bridge
@@ -176,7 +176,7 @@ void cMap::DrawBitmap(HDC hdc, int health, int vScreenMinX, int vScreenMaxX, REC
     TransparentBlt(hdc, 450, 20, bitGauge.bmWidth - bitGauge.bmWidth / 100 * (100 - health) - damage, bitGauge.bmHeight,
         hMemDC, 0, 0, bitGauge.bmWidth - bitGauge.bmWidth / 100 * (100 - health) - damage, bitGauge.bmHeight, NULL);
 
-    if (bitGauge.bmWidth - bitGauge.bmWidth / 100 * (100 - health) - damage < -50) Death = true;
+    if (bitGauge.bmWidth - bitGauge.bmWidth / 100 * (100 - health) - damage < -20) Death = true;
 
     SelectObject(hMemDC, hOldBitmap);
     DeleteDC(hMemDC);
@@ -257,13 +257,25 @@ bool cMap::GetDeath()
 
 void cMap::OnCollision()
 {
+    
+
     for (int i = 0; i < cntScreenObj; i++)
     {
         static RECT tmpRect;
+        RECT objRect;
 
-        RECT objRect = { obj[i]->ptObj.x, obj[i]->ptObj.y,
-                        obj[i]->ptObj.x + ObjImg[obj[i]->idxObjImg]->bitObjImg.bmWidth,
-                        obj[i]->ptObj.y + ObjImg[obj[i]->idxObjImg]->bitObjImg.bmHeight };
+        if (obj[i]->damage > 0)
+        {
+            objRect = { obj[i]->ptObj.x + 30, obj[i]->ptObj.y + 30,
+                            obj[i]->ptObj.x + ObjImg[obj[i]->idxObjImg]->bitObjImg.bmWidth - 30,
+                            obj[i]->ptObj.y + ObjImg[obj[i]->idxObjImg]->bitObjImg.bmHeight };
+        }
+        else
+        {
+            objRect = { obj[i]->ptObj.x, obj[i]->ptObj.y,
+                            obj[i]->ptObj.x + ObjImg[obj[i]->idxObjImg]->bitObjImg.bmWidth,
+                            obj[i]->ptObj.y + ObjImg[obj[i]->idxObjImg]->bitObjImg.bmHeight };
+        }
 
         if(IntersectRect(&tmpRect, &objRect, &playerRect))
         {

@@ -18,7 +18,7 @@ private:
 	POINT ptCookie;
 	const int cookieHeight = 250;
 
-	enum { RUN, JUMP, SLIDE, DOUBLEJUMP };
+	enum { RUN, JUMP, SLIDE, DEATH };
 	int cookieState;
 	int cntJump;
 	bool curJump;
